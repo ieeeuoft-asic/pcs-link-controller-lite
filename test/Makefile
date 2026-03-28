@@ -6,7 +6,14 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v
+PROJECT_SOURCES = tt_um_pcs_link_lite.v \
+                  pcs_link_ctrl_top.v \
+                  ltssm_arbiter.v \
+                  encoder_8b10b.v \
+                  decoder_8b10b.v \
+                  cdc_fifo.v \
+                  serializer_10b.v \
+                  deserializer_10b.v
 
 ifneq ($(GATES),yes)
 
