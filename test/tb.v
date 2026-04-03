@@ -10,7 +10,7 @@ module tb ();
   end
 
   // Signals
-  reg clk_sys;    // ui_in
+  reg clk_sys;    // ui_in[0]
   reg serial_in;  // ui_in[1]
   reg rx_req;     // ui_in[2]
   reg tx_valid;   // ui_in[3]
