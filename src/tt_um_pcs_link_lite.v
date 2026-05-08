@@ -23,9 +23,6 @@ module tt_um_pcs_link_lite (
     wire serial_in = ui_in[1];
     wire rx_req    = ui_in[2];
     wire tx_valid  = ui_in[3];
-    
-    // Unused input pins
-    wire _unused_ui = &{ui_in[7:4]};
 
     // **********************
     // OUTPUT MAPPING (uo_out)
@@ -35,7 +32,6 @@ module tt_um_pcs_link_lite (
     wire rx_ack;
     wire occupied;
     wire link_lock_out;
-    wire tx_fifo_full;
 
     // Explicitly assign each internal wire to a specific output pin
     assign uo_out[0] = serial_out;
@@ -43,10 +39,9 @@ module tt_um_pcs_link_lite (
     assign uo_out[2] = link_lock_out;
     assign uo_out[3] = occupied;
     assign uo_out[4] = rx_valid;
-    assign uo_out[5] = tx_fifo_full;
     
     // Tie unused output pins safely to ground
-    assign uo_out[7:6] = 2'b00; 
+    assign uo_out[7:5] = 3'b000; 
 
     // **********************
     // BIDIRECTIONAL BUS MAPPING (uio)
@@ -78,11 +73,7 @@ module tt_um_pcs_link_lite (
         .rx_valid(rx_valid),
         .rx_ack(rx_ack),
         .occupied(occupied),
-        .link_lock_out(link_lock_out),
-        .tx_fifo_full(tx_fifo_full)
+        .link_lock_out(link_lock_out)
     );
-
-    // List all unused inputs to prevent OpenLane warnings
-    wire _unused = &{ena, _unused_ui, 1'b0};
 
 endmodule
