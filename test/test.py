@@ -180,7 +180,7 @@ async def test_pcs_verification_suite(dut):
         scoreboard.add_expected(expected_10b, tx_val)
         
         # Check FIFO status before driving new data
-        while int(dut.user_project.pcs_core.tx_cdc_fifo.full.value) == 1:
+        while (int(dut.uo_out[5].value) & (1 << 3)) != 0:
             dut._log.warning(f"TX FIFO Full! Waiting... (Attempt {i+1})")
             await RisingEdge(dut.clk_sys)
             
