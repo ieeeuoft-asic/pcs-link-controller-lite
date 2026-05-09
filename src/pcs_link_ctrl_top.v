@@ -21,7 +21,8 @@ module pcs_link_ctrl_top #(
     output wire rx_valid,
     output wire rx_ack,
     output wire occupied,
-    output wire link_lock_out
+    output wire link_lock_out,
+    output wire tx_fifo_full
 );
     // **********************
     // Intermediate signals
@@ -33,7 +34,7 @@ module pcs_link_ctrl_top #(
     wire bus_dir; // 1 for RX, 0 for TX
     wire tx_ser_rd_en;
     wire rx_deser_wr_en;
-    wire tx_fifo_empty, tx_fifo_full;
+    wire tx_fifo_empty;
     wire rx_fifo_empty, rx_fifo_full;
 
     // Datapath signals
@@ -79,16 +80,6 @@ module pcs_link_ctrl_top #(
         .data_out(tx_enc_data)
     );
 
-     // Wait 1 cycle for the encoder to produce last set of data for fifo
-    reg tx_fifo_wr_en;
-    always @(posedge clk_sys or negedge rst_n) begin
-        if (!rst_n) begin
-            tx_fifo_wr_en <= 1'b0;
-        end else begin
-            tx_fifo_wr_en <= tx_en;
-        end
-    end
-
     cdc_fifo #(
         .DATA_WIDTH(DATA_WIDTH),
         .ADDR_WIDTH(ADDR_WIDTH)
@@ -96,7 +87,7 @@ module pcs_link_ctrl_top #(
         // Write side
         .clk_wr(clk_sys),
         .rst_n_wr(rst_n && !flush),
-        .wr_en(tx_fifo_wr_en),
+        .wr_en(tx_en),
         .data_in(tx_enc_data),
         .full(tx_fifo_full),
 
@@ -127,7 +118,6 @@ module pcs_link_ctrl_top #(
         .fifo_full(rx_fifo_full),
         .data_out(rx_deser_data_out),
         .wr_en(rx_deser_wr_en),
-        .comma_det(),
         .link_lock(link_lock_out)
     );
 
@@ -156,8 +146,7 @@ module pcs_link_ctrl_top #(
         .data_in(rx_fifo_data_out),
         .rd_en(rx_rd_en),
         .data_out(rx_decoded_byte),
-        .valid_out(rx_valid),
-        .decode_err()
+        .valid_out(rx_valid)
     );
 
 endmodule

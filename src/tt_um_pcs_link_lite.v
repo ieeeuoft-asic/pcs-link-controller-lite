@@ -32,6 +32,7 @@ module tt_um_pcs_link_lite (
     wire rx_ack;
     wire occupied;
     wire link_lock_out;
+    wire tx_fifo_full;
 
     // Explicitly assign each internal wire to a specific output pin
     assign uo_out[0] = serial_out;
@@ -39,20 +40,16 @@ module tt_um_pcs_link_lite (
     assign uo_out[2] = link_lock_out;
     assign uo_out[3] = occupied;
     assign uo_out[4] = rx_valid;
-    
-    // Tie unused output pins safely to ground
-    assign uo_out[7:5] = 3'b000; 
+    assign uo_out[5] = tx_fifo_full;
+    assign uo_out[7:6] = 2'b00;
 
     // **********************
     // BIDIRECTIONAL BUS MAPPING (uio)
     // **********************
     wire [7:0] pcs_data_out;
-    
-    // Drive the output pad with whatever the PCS core is transmitting
     assign uio_out = pcs_data_out;
-    
-    // Set Output Enable: 1 (drive output) when rx_ack is high, 0 (read input) otherwise
     assign uio_oe = {8{rx_ack}};
+    wire _unused = &{1'b0, ena, ui_in[7:4]};
 
     // **********************
     // PCS INSTANTIATION
@@ -73,7 +70,8 @@ module tt_um_pcs_link_lite (
         .rx_valid(rx_valid),
         .rx_ack(rx_ack),
         .occupied(occupied),
-        .link_lock_out(link_lock_out)
+        .link_lock_out(link_lock_out),
+        .tx_fifo_full(tx_fifo_full)
     );
 
 endmodule
