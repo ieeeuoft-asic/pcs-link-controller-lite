@@ -29,7 +29,7 @@
 
   "//": "If you need a custom clock configuration, read the following documentation first:",
   "//": "https://tinytapeout.com/faq/#how-can-i-map-an-additional-external-clock-to-one-of-the-gpios",
-  "CLOCK_PORT": ["clk", "ui_in"],
+  "CLOCK_PORT": ["clk", "ui_in[0]"],
   "BASE_SDC_FILE": "dir::pcs_lite.sdc",
 
   "//": "Configuration docs: https://librelane.readthedocs.io/en/latest/reference/configuration.html",
